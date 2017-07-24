@@ -1,5 +1,6 @@
 package bgroup.controller;
 
+import bgroup.model.CleverCard;
 import bgroup.model.User;
 import bgroup.model.UserProfile;
 import bgroup.service.UserProfileService;
@@ -9,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -61,6 +63,21 @@ public class UserController {
         model.addAttribute("users", users);
         model.addAttribute("loggedinuser", getPrincipal());
         return "userslist";
+    }
+
+    @RequestMapping(value = {"addccard"}, method = RequestMethod.GET)
+    public String addccard(ModelMap model) {
+        User user = getUser();
+        if (user != null && user.isUserHasRole("LOGIN")) {
+            logger.debug("ok");
+        } else {
+            logger.error("user: {}", user.getUserProfiles());
+        }
+        //List<User> users = userService.findAllUsers();
+        //model.addAttribute("users", users);
+        model.addAttribute("ccard", new CleverCard());
+        model.addAttribute("user", user);
+        return "ccard";
     }
 
     /**
@@ -154,8 +171,8 @@ public class UserController {
      */
     @RequestMapping(value = {"/delete-user-{userName}"}, method = RequestMethod.GET)
     public String deleteUser(@PathVariable String userName) {
-		/*
-		нужно добавить логер
+        /*
+        нужно добавить логер
 		 */
         userService.deleteUserByUserName(userName);
         return "redirect:/index";
@@ -230,5 +247,10 @@ public class UserController {
         return authenticationTrustResolver.isAnonymous(authentication);
     }
 
+    private User getUser() {
+        User user = null;
+        user = userService.findByUserName(getPrincipal());
+        return user;
+    }
 
 }

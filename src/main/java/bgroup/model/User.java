@@ -195,4 +195,10 @@ public class User implements Serializable {
     }
 
 
+    public boolean isUserHasRole(String roleName) {
+        for (UserProfile role : this.userProfiles) {
+            if (role.getType().equals(roleName)) return true;
+        }
+        return false;
+    }
 }
