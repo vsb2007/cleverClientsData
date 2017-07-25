@@ -30,7 +30,7 @@ public class CleverCardDaoImpl extends AbstractDao<Integer, CleverCard> implemen
     @Override
     public List<CleverCard> findAllByUserId(int id) {
         Criteria criteria = createEntityCriteria();
-        criteria.add(Restrictions.eq("user_id", id));
+        criteria.add(Restrictions.eq("userId", id));
         //criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);//To avoid duplicates.
         List<CleverCard> cleverCards = (List<CleverCard>) criteria.list();
         return cleverCards;
@@ -42,9 +42,24 @@ public class CleverCardDaoImpl extends AbstractDao<Integer, CleverCard> implemen
     }
 
     @Override
-    public void save(CleverCard cleverCard) {
-        persist(cleverCard);
+    public boolean save(CleverCard cleverCard) {
+        try {
+            persist(cleverCard);
+        }catch (Exception e){
+            logger.error(e.toString());
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
-
+    @Override
+    public CleverCard findByCardNumber(int cardNumber) {
+        Criteria criteria = createEntityCriteria();
+        criteria.add(Restrictions.eq("cardNumber", cardNumber));
+        //criteria.setResultTransformer(Criteria.DISTINCT_ROOT_ENTITY);//To avoid duplicates.
+        List<CleverCard> cleverCards = (List<CleverCard>) criteria.list();
+        if (cleverCards == null || cleverCards.size() != 1) return null;
+        return cleverCards.get(0);
+    }
 }

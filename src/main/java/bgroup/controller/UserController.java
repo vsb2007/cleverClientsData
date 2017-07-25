@@ -3,6 +3,7 @@ package bgroup.controller;
 import bgroup.model.CleverCard;
 import bgroup.model.User;
 import bgroup.model.UserProfile;
+import bgroup.service.CleverCardService;
 import bgroup.service.UserProfileService;
 import bgroup.service.UserService;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -36,6 +38,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+
+    @Autowired
+    CleverCardService cleverCardService;
 
     @Autowired
     UserProfileService userProfileService;
@@ -77,6 +82,32 @@ public class UserController {
         //model.addAttribute("users", users);
         model.addAttribute("ccard", new CleverCard());
         model.addAttribute("user", user);
+        return "ccard";
+    }
+
+    @RequestMapping(value = "saveCcard")
+    public String saveCcard(HttpServletRequest request, ModelMap model) {
+        logger.info("start: {}", request);
+        User user = getUser();
+        String error = null;
+        int err = cleverCardService.saveCleverCard(request, user);
+        if (err == 0) {
+            error = "Форма успешно зарегистрирована";
+        } else if (err == -3) {
+            error = "Ошибка: номер карты зарегистрирован";
+        } else if (err == -10) {
+            error = "Проблема с БД";
+        } else {
+            error = "Заполните форму: ошибка " + err;
+        }
+        model.addAttribute("success", error);
+        //model.addAttribute("success", "CleverCard " + " registered successfully");
+        model.addAttribute("loggedinuser",
+
+                getPrincipal());
+        //model.setViewName("ccard");
+        //return "success";
+        //return model;
         return "ccard";
     }
 

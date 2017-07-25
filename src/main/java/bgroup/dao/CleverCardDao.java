@@ -9,8 +9,9 @@ import java.util.List;
 public interface CleverCardDao {
 
     CleverCard findById(int id);
+    CleverCard findByCardNumber(int cardNumber);
 
-    void save(CleverCard cleverCard);
+    boolean save(CleverCard cleverCard);
 
     //void deleteByUserName(String userName);
     List<CleverCard> findAllByAzsId(int id);

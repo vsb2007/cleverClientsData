@@ -46,15 +46,18 @@ public class User implements Serializable {
     @Column(name = "PHONE",nullable = true)
     private String phone;
 
+    @Column(name = "AZS",nullable = true)
+    private Integer azs;
+
     @Column(name = "EMAIL",nullable = true)
     private String email;
 
     @Type(type = "org.hibernate.type.NumericBooleanType")
-    @Column(name = "BLOCKED", columnDefinition = "BIT default 1")
+    @Column(name = "BLOCKED", columnDefinition = "INT default 1")
     private Boolean blocked;
 
     @Type(type = "org.hibernate.type.NumericBooleanType")
-    @Column(name = "DELETED", columnDefinition = "BIT default 0")
+    @Column(name = "DELETED", columnDefinition = "INT default 0")
     private Boolean deleted;
 
     @NotEmpty
@@ -150,6 +153,14 @@ public class User implements Serializable {
 
     public void setUserProfiles(Set<UserProfile> userProfiles) {
         this.userProfiles = userProfiles;
+    }
+
+    public Integer getAzs() {
+        return azs;
+    }
+
+    public void setAzs(Integer azs) {
+        this.azs = azs;
     }
 
     @Override

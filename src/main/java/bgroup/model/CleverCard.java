@@ -16,6 +16,7 @@ import java.util.Set;
 @Entity
 @Table(name = "CLEVER_CARD")
 public class CleverCard implements Serializable {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -23,9 +24,8 @@ public class CleverCard implements Serializable {
     @Column(name = "dateBirth")
     private Date dateBirth;
 
-    @Type(type = "org.hibernate.type.NumericBooleanType")
-    @Column(name = "SEX", columnDefinition = "INT default 0")
-    private Boolean sex;
+    @Column(name = "SEX")
+    private Integer sex;
 
     @Column(name = "phoneNumber")
     private String phoneNumber;
@@ -44,7 +44,7 @@ public class CleverCard implements Serializable {
     private String vendorAuto;
 
     @Column(name = "card_number")
-    private String cardNumber;
+    private int cardNumber;
 
     @Column(name = "dateFill")
     private Date dateFill;
@@ -52,13 +52,16 @@ public class CleverCard implements Serializable {
     @Column(name = "operator_name_card_out")
     private String operatorNameCardOut;
 
-    @NotEmpty
+
     @Column(name = "azs", columnDefinition = "INT default -1")
     private Integer azs;
 
-    @NotEmpty
+
     @Column(name = "user_id", columnDefinition = "INT default -1")
     private Integer userId;
+
+    public CleverCard() {
+    }
 
     public Integer getUserId() {
         return userId;
@@ -84,11 +87,11 @@ public class CleverCard implements Serializable {
         this.dateBirth = dateBirth;
     }
 
-    public Boolean getSex() {
+    public Integer getSex() {
         return sex;
     }
 
-    public void setSex(Boolean sex) {
+    public void setSex(Integer sex) {
         this.sex = sex;
     }
 
@@ -116,11 +119,11 @@ public class CleverCard implements Serializable {
         this.vendorAuto = vendorAuto;
     }
 
-    public String getCardNumber() {
+    public int getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(String cardNumber) {
+    public void setCardNumber(int cardNumber) {
         this.cardNumber = cardNumber;
     }
 
