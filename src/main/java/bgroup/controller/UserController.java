@@ -189,6 +189,7 @@ public class UserController {
 		}*/
 
         userService.updateUser(user);
+        logger.info("User: {}",user);
         model.addAttribute("success", "User " + user.getFirstName() + " " + user.getLastName() + " updated successfully");
         model.addAttribute("loggedinuser", getPrincipal());
         model.addAttribute("edit", true);
