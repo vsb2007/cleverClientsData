@@ -2,6 +2,8 @@ package bgroup.model;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -34,22 +36,22 @@ public class User implements Serializable {
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @Column(name = "FIRST_NAME",nullable = true)
+    @Column(name = "FIRST_NAME", nullable = true)
     private String firstName;
 
-    @Column(name = "LAST_NAME",nullable = true)
+    @Column(name = "LAST_NAME", nullable = true)
     private String lastName;
 
-    @Column(name = "PATRONYMIC_NAME",nullable = true)
+    @Column(name = "PATRONYMIC_NAME", nullable = true)
     private String patronymicName;
 
-    @Column(name = "PHONE",nullable = true)
+    @Column(name = "PHONE", nullable = true)
     private String phone;
 
-    @Column(name = "AZS",nullable = true)
+    @Column(name = "AZS", nullable = true)
     private Integer azs;
 
-    @Column(name = "EMAIL",nullable = true)
+    @Column(name = "EMAIL", nullable = true)
     private String email;
 
     @Type(type = "org.hibernate.type.NumericBooleanType")
@@ -65,7 +67,8 @@ public class User implements Serializable {
     @JoinTable(name = "APP_USER_USER_PROFILE",
             joinColumns = {@JoinColumn(name = "USER_ID")},
             inverseJoinColumns = {@JoinColumn(name = "USER_PROFILE_ID")})
-    private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
+    //private Set<UserProfile> userProfiles = new HashSet<UserProfile>();
+    private List<UserProfile> userProfiles = new LinkedList<UserProfile>();
 
     public Integer getId() {
         return id;
@@ -147,11 +150,21 @@ public class User implements Serializable {
         this.deleted = deleted;
     }
 
+    /*
     public Set<UserProfile> getUserProfiles() {
         return userProfiles;
     }
 
     public void setUserProfiles(Set<UserProfile> userProfiles) {
+        this.userProfiles = userProfiles;
+    }
+*/
+
+    public List<UserProfile> getUserProfiles() {
+        return userProfiles;
+    }
+
+    public void setUserProfiles(List<UserProfile> userProfiles) {
         this.userProfiles = userProfiles;
     }
 
@@ -202,7 +215,7 @@ public class User implements Serializable {
     public String toString() {
         return "User [id=" + id + ", userName=" + userName + ", password=" + password
                 + ", firstName=" + firstName + ", lastName=" + lastName
-                + ", email=" + email + ", azs=" + azs +"]";
+                + ", email=" + email + ", azs=" + azs + "]";
     }
 
 
@@ -211,5 +224,11 @@ public class User implements Serializable {
             if (role.getType().equals(roleName)) return true;
         }
         return false;
+    }
+
+    public String getFio() {
+        return this.getLastName() + " "
+                + this.getFirstName() + " "
+                + this.getPatronymicName();
     }
 }

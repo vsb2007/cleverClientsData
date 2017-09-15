@@ -3,6 +3,7 @@ package bgroup.service;
 import java.util.List;
 
 import bgroup.model.User;
+import org.springframework.security.core.GrantedAuthority;
 
 
 public interface UserService {
@@ -24,4 +25,8 @@ public interface UserService {
     boolean changePassword(String id);
 
     boolean isHasRole(String userName, String role);
+
+    User findByFio(String fio);
+
+    public List<GrantedAuthority> getGrantedAuthorities(User user);
 }

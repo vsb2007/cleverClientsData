@@ -1,11 +1,14 @@
 package bgroup.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import bgroup.model.SmsSender;
 import bgroup.model.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -129,5 +132,21 @@ public class UserServiceImpl implements UserService {
             if (userProfile.getType().equals(role)) return true;
         }
         return false;
+    }
+
+    @Override
+    public User findByFio(String fio) {
+        return userDao.findByFio(fio);
+    }
+
+    public List<GrantedAuthority> getGrantedAuthorities(User user) {
+        List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+
+        for (UserProfile userProfile : user.getUserProfiles()) {
+            //logger.info("UserProfile : {}", userProfile);
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + userProfile.getType()));
+        }
+        //logger.info("authorities : {}", authorities);
+        return authorities;
     }
 }

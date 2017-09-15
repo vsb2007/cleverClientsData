@@ -1,4 +1,4 @@
-package bgroup.security;
+package bgroup.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import bgroup.model.User;
 import bgroup.model.UserProfile;
-import bgroup.service.UserService;
 
 
 @Service("customUserDetailsService")
@@ -44,7 +43,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
 
-    private List<GrantedAuthority> getGrantedAuthorities(User user) {
+    public List<GrantedAuthority> getGrantedAuthorities(User user) {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
         for (UserProfile userProfile : user.getUserProfiles()) {

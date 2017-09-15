@@ -1,5 +1,7 @@
 package bgroup.model;
 
+import org.springframework.security.core.GrantedAuthority;
+
 import java.io.Serializable;
 
 import javax.persistence.Column;
@@ -11,7 +13,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name="USER_PROFILE")
-public class UserProfile implements Serializable{
+public class UserProfile implements Serializable,GrantedAuthority {
 
 	@Id @GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Integer id;	
@@ -33,6 +35,11 @@ public class UserProfile implements Serializable{
 
 	public void setType(String type) {
 		this.type = type;
+	}
+
+	@Override
+	public String getAuthority() {
+		return this.type;
 	}
 
 	@Override

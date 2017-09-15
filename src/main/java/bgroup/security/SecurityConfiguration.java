@@ -50,11 +50,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/demo-files/**").permitAll()
                 .antMatchers("/fonts/**").permitAll()
+                .antMatchers("/login").permitAll()
+                .antMatchers("/getContext").permitAll()
                 .antMatchers("/").access("hasRole('LOGIN')")
                 .antMatchers("/**/").access("hasRole('LOGIN')")
                 .and()
                 .formLogin().loginPage("/login").permitAll()
-                .loginProcessingUrl("/login").usernameParameter("userName").passwordParameter("password").and()
+                .loginProcessingUrl("/admin").usernameParameter("userName").passwordParameter("password").and()
                 .csrf()
                 .and()
                 .exceptionHandling().accessDeniedPage("/Access_Denied")
@@ -74,13 +76,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         return authenticationProvider;
     }
 
-   /* @Bean
-    public PersistentTokenBasedRememberMeServices getPersistentTokenBasedRememberMeServices() {
-        PersistentTokenBasedRememberMeServices tokenBasedservice = new PersistentTokenBasedRememberMeServices(
-                "remember-me", userDetailsService, tokenRepository);
-        return tokenBasedservice;
-    }
-*/
+    /* @Bean
+     public PersistentTokenBasedRememberMeServices getPersistentTokenBasedRememberMeServices() {
+         PersistentTokenBasedRememberMeServices tokenBasedservice = new PersistentTokenBasedRememberMeServices(
+                 "remember-me", userDetailsService, tokenRepository);
+         return tokenBasedservice;
+     }
+ */
     @Bean
     public AuthenticationTrustResolver getAuthenticationTrustResolver() {
         return new AuthenticationTrustResolverImpl();

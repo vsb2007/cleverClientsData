@@ -4,17 +4,21 @@ import bgroup.model.CleverCard;
 import bgroup.model.User;
 import bgroup.model.UserProfile;
 import bgroup.service.CleverCardService;
+import bgroup.service.CustomUserDetailsService;
 import bgroup.service.UserProfileService;
 import bgroup.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -26,6 +30,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 
@@ -38,6 +43,9 @@ public class UserController {
 
     @Autowired
     UserService userService;
+    @Autowired
+    @Qualifier("customUserDetailsService")
+    UserDetailsService userDetailsService;
 
     @Autowired
     CleverCardService cleverCardService;
@@ -59,14 +67,17 @@ public class UserController {
      */
     @RequestMapping(value = {"/", "index"}, method = RequestMethod.GET)
     public String indexPage(ModelMap model) {
+        User user = getUser();
+        model.addAttribute("loggedinuser", user);
         return "index";
     }
 
     @RequestMapping(value = {"userslist"}, method = RequestMethod.GET)
     public String listUsers(ModelMap model) {
         List<User> users = userService.findAllUsers();
+        User user = getUser();
         model.addAttribute("users", users);
-        model.addAttribute("loggedinuser", getPrincipal());
+        model.addAttribute("loggedinuser", user);
         return "userslist";
     }
 
@@ -74,20 +85,19 @@ public class UserController {
     public String addccard(ModelMap model) {
         User user = getUser();
         if (user != null && user.isUserHasRole("LOGIN")) {
-            logger.debug("ok");
+            //logger.debug("ok");
         } else {
-            logger.error("user: {}", user.getUserProfiles());
+            //logger.error("что-то не так!... закрыта сессия скорее всего!");
         }
-        //List<User> users = userService.findAllUsers();
-        //model.addAttribute("users", users);
         model.addAttribute("ccard", new CleverCard());
         model.addAttribute("user", user);
+        model.addAttribute("loggedinuser", user);
         return "ccard";
     }
 
     @RequestMapping(value = "saveCcard")
     public String saveCcard(HttpServletRequest request, ModelMap model) {
-        logger.info("start: {}", request);
+        //logger.info("start: {}", request);
         User user = getUser();
         String error = null;
         int err = cleverCardService.saveCleverCard(request, user);
@@ -101,13 +111,7 @@ public class UserController {
             error = "Заполните форму: ошибка " + err;
         }
         model.addAttribute("success", error);
-        //model.addAttribute("success", "CleverCard " + " registered successfully");
-        model.addAttribute("loggedinuser",
-
-                getPrincipal());
-        //model.setViewName("ccard");
-        //return "success";
-        //return model;
+        model.addAttribute("loggedinuser", user);
         return "ccard";
     }
 
@@ -117,9 +121,10 @@ public class UserController {
     @RequestMapping(value = {"/newuser"}, method = RequestMethod.GET)
     public String newUser(ModelMap model) {
         User user = new User();
+        User userLoggedIn = getUser();
         model.addAttribute("user", user);
         model.addAttribute("edit", false);
-        model.addAttribute("loggedinuser", getPrincipal());
+        model.addAttribute("loggedinuser", userLoggedIn);
         return "registration";
     }
 
@@ -150,9 +155,9 @@ public class UserController {
         }
 
         userService.saveUser(user);
-
+        User userLoggedIn = getUser();
         model.addAttribute("success", "User " + user.getFirstName() + " " + user.getLastName() + " registered successfully");
-        model.addAttribute("loggedinuser", getPrincipal());
+        model.addAttribute("loggedinuser", userLoggedIn);
         //return "success";
         return "registrationsuccess";
     }
@@ -164,9 +169,10 @@ public class UserController {
     @RequestMapping(value = {"/edit-user-{userName}"}, method = RequestMethod.GET)
     public String editUser(@PathVariable String userName, ModelMap model) {
         User user = userService.findByUserName(userName);
+        User userLoggedIn = getUser();
         model.addAttribute("user", user);
         model.addAttribute("edit", true);
-        model.addAttribute("loggedinuser", getPrincipal());
+        model.addAttribute("loggedinuser", userLoggedIn);
         return "registration";
     }
 
@@ -175,7 +181,7 @@ public class UserController {
      * updating user in database. It also validates the user input
      */
     @RequestMapping(value = {"/edit-user-{userName}"}, method = RequestMethod.POST)
-    public String updateUser(@Valid User user, BindingResult result,
+    public String updateUser(@Valid User userEdit, BindingResult result,
                              ModelMap model, @PathVariable String userName) {
         if (result.hasErrors()) {
             return "registration";
@@ -187,13 +193,13 @@ public class UserController {
 		    result.addError(ssoError);
 			return "registration";
 		}*/
-
-        userService.updateUser(user);
-        logger.info("User: {}",user);
-        model.addAttribute("success", "User " + user.getFirstName() + " " + user.getLastName() + " updated successfully");
-        model.addAttribute("loggedinuser", getPrincipal());
+        User loggedinuser = getUser();
+        userService.updateUser(userEdit);
+        //logger.info("User: {}", userEdit);
+        model.addAttribute("success", "User " + userEdit.getFirstName() + " " + userEdit.getLastName() + " updated successfully");
+        model.addAttribute("loggedinuser", loggedinuser);
         model.addAttribute("edit", true);
-        model.addAttribute("user", user);
+        model.addAttribute("user", userEdit);
         return "registration";
     }
 
@@ -233,9 +239,40 @@ public class UserController {
      * If users is already logged-in and tries to goto login page again, will be redirected to list page.
      */
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String loginPage() {
+    public String loginPage(ModelMap model) {
         if (isCurrentAuthenticationAnonymous()) {
+            List<User> users = userService.findAllUsers();
+            if (users != null) {
+                model.addAttribute("usersList", users);
+            }
             return "login";
+        } else {
+            return "redirect:/index";
+        }
+    }
+
+    @RequestMapping(value = "/getContext", method = RequestMethod.POST)
+    public String loginPageAuth(HttpServletRequest request) {
+        //CustomUserDetailsService
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String fio = request.getParameter("fio");
+        User user = userService.findByFio(fio);
+        if (user == null) return "redirect:/login";
+        UserProfile r = new UserProfile();
+        r.setType("LOGIN");
+        List<UserProfile> roles = new LinkedList<UserProfile>();
+        roles.add(r);
+        user.setUserProfiles(roles);
+        Authentication auth = new UsernamePasswordAuthenticationToken(user, user.getPassword(), userService.getGrantedAuthorities(user));
+        SecurityContextHolder.getContext().setAuthentication(auth);
+
+        return "redirect:/index";
+    }
+
+    @RequestMapping(value = "/admin", method = RequestMethod.GET)
+    public String loginAdminPage() {
+        if (isCurrentAuthenticationAnonymous()) {
+            return "admin";
         } else {
             return "redirect:/index";
         }
@@ -265,9 +302,12 @@ public class UserController {
 
         if (principal instanceof UserDetails) {
             userName = ((UserDetails) principal).getUsername();
+        } else if (principal instanceof User) {
+            userName = ((User) principal).getUserName();
         } else {
             userName = principal.toString();
         }
+        logger.debug("userName: {}", userName);
         return userName;
     }
 
