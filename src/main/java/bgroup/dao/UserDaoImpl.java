@@ -74,6 +74,7 @@ public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
         crit.add(Restrictions.eq("lastName", fioArray[0]));
         crit.add(Restrictions.eq("firstName", fioArray[1]));
         crit.add(Restrictions.eq("patronymicName", fioArray[2]));
+        crit.add(Restrictions.eq("deleted", false));
 
         User user = (User) crit.uniqueResult();
         return user;

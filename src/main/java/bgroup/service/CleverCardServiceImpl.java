@@ -52,7 +52,8 @@ public class CleverCardServiceImpl implements CleverCardService {
         String dateBirth = request.getParameter("dateBirth");
         String sexString = request.getParameter("sex");
         String vendorAuto = request.getParameter("vendorAuto");
-        String operatorNameCardOut = request.getParameter("operatorNameCardOut");
+        //String operatorNameCardOut = request.getParameter("operatorNameCardOut");
+        //String operatorNameCardOut = request.getParameter(user.getFio());
 
         Integer sex = null;
         try {
@@ -84,7 +85,7 @@ public class CleverCardServiceImpl implements CleverCardService {
         cleverCard.setPhoneNumber(phoneNumber);
         cleverCard.setSex(sex);
         cleverCard.setVendorAuto(vendorAuto);
-        cleverCard.setOperatorNameCardOut(operatorNameCardOut);
+        //cleverCard.setOperatorNameCardOut(operatorNameCardOut);
         if (cleverCardDao.save(cleverCard)) return 0;
         return -10;
     }

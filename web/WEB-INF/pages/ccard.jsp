@@ -20,7 +20,9 @@
                         <div class="row">
                             <div class="col s12">
                                 <div class="input-field col s12">
-                                    <input type="text" class="validate" name="cardNumber" id="cardNumber" required/>
+                                    <input type="text" class="validate" name="cardNumber" id="cardNumber"
+                                           pattern="\d\d\d\d\d\d" placeholder="шесть цифр"
+                                           required/>
                                     <label for="cardNumber">Номер Карты</label>
                                 </div>
                             </div>
@@ -53,7 +55,7 @@
                             <div class="col s12">
                                 <div class="input-field col s12">
                                     <input type="tel" class="validate" name="phoneNumber" id="phoneNumber" required
-                                           pattern="\d\d\d\d\d\d\d\d\d\d" placeholder="9223334444"
+                                           pattern="8\d\d\d\d\d\d\d\d\d\d" placeholder="89223334444"
                                            onkeyup="validatePhone(this)" onchange="validatePhone(this)"/>
                                     <label for="phoneNumber">Телефон</label>
                                 </div>
@@ -98,7 +100,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
+                       <%-- <div class="row">
                             <div class="col s12">
                                 <div class="input-field col s12">
                                     <input type="text" class="validate" name="operatorNameCardOut"
@@ -107,6 +109,7 @@
                                 </div>
                             </div>
                         </div>
+                        --%>
                         <div class="row">
                             <div class="col s12">
                                 <input type="submit" value="Зарегистрировать" class="btn btn-primary btn-sm"/>
@@ -173,7 +176,7 @@
     function validatePhone(inp) {
         str = inp.value;
         str = str.replace(/[^0-9]/gim, '');
-        if (str.length > 10) str = str.substring(0, 10);
+        if (str.length > 10) str = str.substring(0, 11);
         inp.value = str;
     }
 </script>
