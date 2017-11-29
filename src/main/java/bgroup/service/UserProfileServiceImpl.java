@@ -11,7 +11,7 @@ import bgroup.model.UserProfile;
 
 
 @Service("userProfileService")
-@Transactional
+@Transactional("transactionManager")
 public class UserProfileServiceImpl implements UserProfileService{
 	
 	@Autowired

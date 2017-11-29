@@ -17,7 +17,7 @@ import bgroup.dao.UserDao;
 import bgroup.model.User;
 
 @Service("userService")
-@Transactional
+@Transactional("transactionManager")
 public class UserServiceImpl implements UserService {
 
     @Autowired

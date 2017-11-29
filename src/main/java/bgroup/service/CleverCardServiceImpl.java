@@ -16,7 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service("cleverCardService")
-@Transactional
+@Transactional("transactionManager")
 public class CleverCardServiceImpl implements CleverCardService {
     static final Logger logger = LoggerFactory.getLogger(CleverCardServiceImpl.class);
     @Autowired
