@@ -4,7 +4,6 @@ import bgroup.model.CleverCard;
 import bgroup.model.User;
 import bgroup.model.UserProfile;
 import bgroup.service.CleverCardService;
-import bgroup.service.CustomUserDetailsService;
 import bgroup.service.UserProfileService;
 import bgroup.service.UserService;
 import org.slf4j.Logger;
@@ -13,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.MessageSource;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,7 +23,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -61,6 +58,10 @@ public class UserController {
     */
     @Autowired
     AuthenticationTrustResolver authenticationTrustResolver;
+/*
+    @Autowired
+    private EnvVariable envVariable;
+*/
 
     /**
      * This method will list all existing users.
@@ -69,6 +70,7 @@ public class UserController {
     public String indexPage(ModelMap model) {
         User user = getUser();
         model.addAttribute("loggedinuser", user);
+
         return "index";
     }
 
@@ -95,7 +97,7 @@ public class UserController {
         return "ccard";
     }
 
-    @RequestMapping(value = "saveCcard")
+    @RequestMapping(value = "saveCcard", method = RequestMethod.POST)
     public String saveCcard(HttpServletRequest request, ModelMap model) {
         //logger.info("start: {}", request);
         User user = getUser();
@@ -113,6 +115,12 @@ public class UserController {
         model.addAttribute("success", error);
         model.addAttribute("loggedinuser", user);
         return "ccard";
+    }
+
+    @RequestMapping(value = "saveCcard", method = RequestMethod.GET)
+    public String saveCcardGet(HttpServletRequest request, ModelMap model) {
+
+        return "redirect:/index";
     }
 
     /**
@@ -140,14 +148,14 @@ public class UserController {
             return "registration";
         }
 
-		/*
+        /*
          * Preferred way to achieve uniqueness of field [sso] should be implementing custom @Unique annotation
-		 * and applying it on field [sso] of Model class [User].
-		 * 
-		 * Below mentioned peace of code [if block] is to demonstrate that you can fill custom errors outside the validation
-		 * framework as well while still using internationalized messages.
-		 * 
-		 */
+         * and applying it on field [sso] of Model class [User].
+         *
+         * Below mentioned peace of code [if block] is to demonstrate that you can fill custom errors outside the validation
+         * framework as well while still using internationalized messages.
+         *
+         */
         if (!userService.isUserNameUnique(user.getId(), user.getUserName())) {
             FieldError ssoError = new FieldError("user", "userName", messageSource.getMessage("non.unique.userName", new String[]{user.getUserName()}, Locale.getDefault()));
             result.addError(ssoError);
@@ -228,7 +236,7 @@ public class UserController {
     /**
      * This method handles Access-Denied redirect.
      */
-    @RequestMapping(value = "/Access_Denied", method = RequestMethod.GET)
+    @RequestMapping(value = "/Access_Denied")
     public String accessDeniedPage(ModelMap model) {
         model.addAttribute("loggedinuser", getPrincipal());
         return "accessDenied";
@@ -238,7 +246,7 @@ public class UserController {
      * This method handles login GET requests.
      * If users is already logged-in and tries to goto login page again, will be redirected to list page.
      */
-    @RequestMapping(value = "/login", method = RequestMethod.GET)
+    @RequestMapping(value = "/login")
     public String loginPage(ModelMap model) {
         if (isCurrentAuthenticationAnonymous()) {
             List<User> users = userService.findAllUsers();
@@ -298,6 +306,8 @@ public class UserController {
      */
     private String getPrincipal() {
         String userName = null;
+        if (SecurityContextHolder.getContext() == null || SecurityContextHolder.getContext().getAuthentication() == null
+                || SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null) return null;
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
         if (principal instanceof UserDetails) {

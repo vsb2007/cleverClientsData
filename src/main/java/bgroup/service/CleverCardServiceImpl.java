@@ -1,12 +1,12 @@
 package bgroup.service;
 
 import bgroup.dao.CleverCardDao;
+import bgroup.jsonService.CcardApi;
 import bgroup.model.CleverCard;
 import bgroup.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +61,9 @@ public class CleverCardServiceImpl implements CleverCardService {
         } catch (Exception e) {
             logger.error(e.toString());
             return -4;
+        }
+        if (!(new CcardApi().isSurnameByCardNumberIsEmpty("01" + cardNumberString))) {
+            return -6;
         }
 
         cleverCard.setAzs(user.getAzs());

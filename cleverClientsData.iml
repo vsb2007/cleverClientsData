@@ -7,6 +7,7 @@
           <file>file://$MODULE_DIR$/src/main/java/bgroup/configuration/AppConfig.java</file>
           <file>file://$MODULE_DIR$/src/main/java/bgroup/configuration/HibernateConfiguration.java</file>
           <file>file://$MODULE_DIR$/src/main/java/bgroup/security/SecurityConfiguration.java</file>
+          <file>file://$MODULE_DIR$/src/main/java/bgroup/configuration/HibernateConfigurationOnline.java</file>
         </fileset>
       </configuration>
     </facet>
@@ -25,7 +26,7 @@
       </configuration>
     </facet>
   </component>
-  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_6">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
     <output url="file://$MODULE_DIR$/target/classes" />
     <output-test url="file://$MODULE_DIR$/target/test-classes" />
     <content url="file://$MODULE_DIR$">
@@ -80,5 +81,11 @@
     <orderEntry type="library" name="Maven: io.netty:netty:3.5.8.Final" level="project" />
     <orderEntry type="library" name="Maven: com.cloudhopper:ch-commons-gsm:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.cloudhopper:ch-commons-charset:3.0.0" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpclient:4.5.3" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.httpcomponents:httpcore:4.4.6" level="project" />
+    <orderEntry type="library" name="Maven: commons-codec:commons-codec:1.9" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-core:2.9.2" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.9.2" level="project" />
+    <orderEntry type="library" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.9.2" level="project" />
   </component>
 </module>
