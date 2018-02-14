@@ -3,10 +3,10 @@
     <!-- Аппендеры -->
     <!-- Файловый аппендер -->
     <appender name="file" class="ch.qos.logback.core.FileAppender">
-        <file>d:\tmp\log\logFile_MedicalPartners.log</file>
+        <file>/tmp/log/logFile.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- daily rollover -->
-            <fileNamePattern>logs\logFile.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <fileNamePattern>logs/logFile.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
             <timeBasedFileNamingAndTriggeringPolicy
                     class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
                 <!-- or whenever the file size reaches 50MB -->

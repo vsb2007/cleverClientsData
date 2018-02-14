@@ -67,6 +67,14 @@ public class HibernateConfiguration {
         envVariable.setApiSurname(environment.getRequiredProperty("api.surname"));
         envVariable.setApiUserName(environment.getRequiredProperty("api.username"));
         envVariable.setApiPassword(environment.getRequiredProperty("api.password"));
+        envVariable.setXmlApiKey(environment.getRequiredProperty("xml.api.key"));
+        envVariable.setXmlApiUrl(environment.getRequiredProperty("xml.api.url"));
+        try {
+            envVariable.setXmlApiMethod(environment.getRequiredProperty("xml.api.method"));
+        } catch (Exception e) {
+            envVariable.setXmlApiMethod("POST");
+        }
+
         return envVariable;
     }
 

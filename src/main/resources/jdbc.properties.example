@@ -1,0 +1,22 @@
+
+jdbc.username:username
+jdbc.password:password
+
+jdbc.driverClassName = com.mysql.jdbc.Driver
+jdbc.url2 = jdbc:mysql://localhost:3306/dbname
+jdbc.url = jdbc:mysql://localhost:3306/dbnameTmp
+
+hibernate.dialect = org.hibernate.dialect.MySQLDialect
+hibernate.show_sql = true
+hibernate.format_sql = true
+hibernate.hbm2ddl = validate
+
+api.url = https://localhost/ccardApi
+api.username = api_username
+api.password = api_password
+api.auth = /api/auth
+api.surname = /api/user/surname
+
+xml.api.url = http://localhost:8080/request
+xml.api.key = api_key_string
+xml.api.method = GET

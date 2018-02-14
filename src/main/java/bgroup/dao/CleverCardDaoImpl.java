@@ -2,6 +2,7 @@ package bgroup.dao;
 
 import bgroup.model.CleverCard;
 import bgroup.model.User;
+import bgroup.xmlService.XmlApiCleverCard;
 import org.hibernate.Criteria;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Order;
@@ -43,7 +44,9 @@ public class CleverCardDaoImpl extends AbstractDao<Integer, CleverCard> implemen
 
     @Override
     public boolean save(CleverCard cleverCard) {
+
         try {
+
             persist(cleverCard);
         }catch (Exception e){
             logger.error(e.toString());

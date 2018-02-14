@@ -1,9 +1,10 @@
 package bgroup.service;
 
 import bgroup.dao.CleverCardDao;
-import bgroup.jsonService.CcardApi;
+import bgroup.jsonService.JsonApiCleverCard;
 import bgroup.model.CleverCard;
 import bgroup.model.User;
+import bgroup.xmlService.XmlApiCleverCard;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ public class CleverCardServiceImpl implements CleverCardService {
     @Override
     public int saveCleverCard(HttpServletRequest request, User user) {
         logger.info("start: saveCleverCard");
+
         if (request == null) return -1;
         Integer cardNumber = null;
         String cardNumberString = request.getParameter("cardNumber");
@@ -62,9 +64,16 @@ public class CleverCardServiceImpl implements CleverCardService {
             logger.error(e.toString());
             return -4;
         }
-        if (!(new CcardApi().isSurnameByCardNumberIsEmpty("01" + cardNumberString))) {
+
+        /*
+        смотрим сущестсвует ли карта в online сервере
+         */
+
+        /*
+        if (!(new JsonApiCleverCard().isSurnameByCardNumberIsEmpty("01" + cardNumberString))) {
             return -6;
         }
+        */
 
         cleverCard.setAzs(user.getAzs());
         cleverCard.setUserId(user.getId());
@@ -88,7 +97,23 @@ public class CleverCardServiceImpl implements CleverCardService {
         cleverCard.setPhoneNumber(phoneNumber);
         cleverCard.setSex(sex);
         cleverCard.setVendorAuto(vendorAuto);
+        //new XmlApiCleverCard().isSurnameByCardNumberIsEmpty(cleverCard.getCardNumber());
+
+        /**
+         * xml пока не работает и не понятно, когда будет
+         */
+        //new XmlApiCleverCard().setCardProperties(cleverCard);
+
         //cleverCard.setOperatorNameCardOut(operatorNameCardOut);
+
+        /*
+        смотрим сущестсвует ли карта в online сервере
+         */
+        if (!(new JsonApiCleverCard().isSurnameByCardNumberIsEmpty("01" + cardNumberString))) {
+            return -6;
+        }
+
+
         if (cleverCardDao.save(cleverCard)) return 0;
         return -10;
     }

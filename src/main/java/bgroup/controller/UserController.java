@@ -104,6 +104,7 @@ public class UserController {
         String error = null;
         int err = cleverCardService.saveCleverCard(request, user);
         if (err == 0) {
+
             error = "Форма успешно зарегистрирована";
         } else if (err == -3) {
             error = "Ошибка: номер карты зарегистрирован";

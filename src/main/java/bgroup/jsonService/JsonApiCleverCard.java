@@ -15,16 +15,15 @@ import java.io.IOException;
  * cleverClients
  */
 
-public class CcardApi {
-    static final Logger logger = LoggerFactory.getLogger(CcardApi.class);
+public class JsonApiCleverCard {
+    static final Logger logger = LoggerFactory.getLogger(JsonApiCleverCard.class);
 
     public boolean isSurnameByCardNumberIsEmpty(String cardNumber) {
-        //ApiFunc apiFunc = new ApiFunc();
         String requestString = new CardNumberRequest("card_number", cardNumber).toJsonString();
         String url = EnvVariable.getApiSurname();
-        logger.info("Url:{}", url);
-        logger.info("request string:" + requestString);
-        ResponseEntity<String> response = ApiFunc.getResponse(url, requestString);
+        //logger.info("Url:{}", url);
+        //logger.info("request string:" + requestString);
+        ResponseEntity<String> response = FuncJsonApiCleverCard.getResponse(url, requestString);
         ObjectMapper mapper = new ObjectMapper();
         SurnameApi surnameApi = null;
         try {
@@ -32,7 +31,7 @@ public class CcardApi {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (surnameApi==null || surnameApi.equals("")) return true;
+        if (surnameApi == null || surnameApi.equals("")) return true;
         else return false;
     }
 }

@@ -10,7 +10,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.ssl.SSLContextBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.web.client.RestTemplate;
@@ -28,11 +27,12 @@ import java.util.List;
  * cleverClients
  */
 
-public class ApiFunc {
+public class FuncJsonApiCleverCard {
 
-    static final Logger logger = LoggerFactory.getLogger(ApiFunc.class);
+    static final Logger logger = LoggerFactory.getLogger(FuncJsonApiCleverCard.class);
 
     private static final MediaType JSON = MediaType.APPLICATION_JSON;
+    private static final MediaType XML = MediaType.APPLICATION_XML;
     private static CustomHttpSessionStatus customHttpSessionStatus;
     private static String sessionId;
     private static final String apiUrl = EnvVariable.getApiUrl();
@@ -91,12 +91,10 @@ public class ApiFunc {
     private static CustomHttpSessionStatus getCustomHttpSessionStatus(String url) {
         String userName = EnvVariable.getApiUserName();
         String password = EnvVariable.getApiPassword();
-
-        //if (customHttpSessionStatus == null) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(JSON);
         UserApiAuth userApiAuth = new UserApiAuth(userName, password);
-        logger.info(userApiAuth.toString());
+        //logger.info(userApiAuth.toString());
         HttpEntity<String> entity = new HttpEntity<String>(userApiAuth.toJsonString(), headers);
         SSLContext sslContext = null;
         sslContext = getSslContext(sslContext);
@@ -128,28 +126,17 @@ public class ApiFunc {
         sessionId = cookie.substring(start + 1, end);
 
         sessionId = response.getHeaders().get("Set-Cookie").get(0);
-        //response.getHeaders().get("Set-Cookie").stream().forEach(System.out::println);
-        logger.info("headers");
         List<String> cooks = response.getHeaders().get("Set-Cookie");
-        for (String str : cooks) {
-            logger.info(str);
-        }
-        /*
-        System.out.println(response.getStatusCode());
-        System.out.println(response.toString());
-        System.out.println(response.getBody());
-        */
         if (!response.getStatusCode().is2xxSuccessful()) {
             return null;
         }
         ObjectMapper mapper = new ObjectMapper();
-
         try {
             customHttpSessionStatus = mapper.readValue(response.getBody(), CustomHttpSessionStatus.class);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        // }
+
         return customHttpSessionStatus;
     }
 

@@ -1,6 +1,6 @@
 package bgroup.configuration;
 
-import org.springframework.stereotype.Service;
+import org.springframework.http.HttpMethod;
 
 /**
  * Created by VSB on 12.12.2017.
@@ -13,6 +13,35 @@ public class EnvVariable {
     private static String apiSurname;
     private static String apiUserName;
     private static String apiPassword;
+    private static String xmlApiKey;
+    private static String xmlApiUrl;
+    private static HttpMethod xmlApiMethod;
+
+    public static HttpMethod getXmlApiMethod() {
+        return xmlApiMethod;
+    }
+
+    public static void setXmlApiMethod(String method) {
+        if (method.equals("GET"))
+            EnvVariable.xmlApiMethod = HttpMethod.GET;
+        else EnvVariable.xmlApiMethod = HttpMethod.POST;
+    }
+
+    public static String getXmlApiUrl() {
+        return xmlApiUrl;
+    }
+
+    public static void setXmlApiUrl(String xmlApiUrl) {
+        EnvVariable.xmlApiUrl = xmlApiUrl;
+    }
+
+    public static String getXmlApiKey() {
+        return xmlApiKey;
+    }
+
+    public static void setXmlApiKey(String xmlApiKey) {
+        EnvVariable.xmlApiKey = xmlApiKey;
+    }
 
     public static String getApiUrl() {
         return apiUrl;
