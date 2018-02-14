@@ -2,6 +2,7 @@
 
 # Технологии
 <ul>
+<li>Java</li>
 <li>Spring MVC, Security</li>
 <li>Hibernate</li>
 <li>MySQL</li>
