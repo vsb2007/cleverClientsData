@@ -20,7 +20,7 @@ stages:
 package:
   stage: build
   tags:
-    - maven
+    - linux
   artifacts:
     paths:
       - $WAR_FILE
