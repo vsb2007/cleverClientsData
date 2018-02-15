@@ -1,13 +1,4 @@
-image: maven:3.3.9-jdk-8
-
 variables:
-  # This will supress any download for dependencies and plugins or upload messages which would clutter the console log.
-  # `showDateTime` will show the passed time in milliseconds. You need to specify `--batch-mode` to make this work.
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=WARN -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
-  # As of Maven 3.3.0 instead of this you may define these options in `.mvn/maven.config` so the same config is used
-  # when running from the command line.
-  # `installAtEnd` and `deployAtEnd` are only effective with recent version of the corresponding plugins.
-  MAVEN_CLI_OPTS: "--batch-mode --errors --fail-at-end --show-version -DinstallAtEnd=true -DdeployAtEnd=true"
   WAR_FILE: target/cleverQ.war
 
 cache:
@@ -15,16 +6,122 @@ cache:
     - .m2/repository
 
 stages:
-  - build
+  - build_war
+  - build_docker
+  #- stage
 
-package:
-  stage: build
+build_war:
+  stage: build_war
+  image: maven:3.3.9-jdk-8
   tags:
     - linux
   artifacts:
     paths:
-      - target/*.jar
       - target/*.war
   script:
     #- mvn archetype:create -DarchetypeArtifactId=maven-archetype-webapp
     - mvn compile war:war
+
+#stage:
+#  stage: stage
+ # when: manual
+  #environment:
+   # name: stage
+  #script:
+  #  - deploy_stage
+  #only:
+#    - master
+
+
+build_docker:
+    stage: build_docker
+    image: docker:git
+    services:
+      - docker:dind
+    script:
+      - setup_docker
+      - build
+    only:
+      - branches
+      - master
+
+.auto_devops: &auto_devops |
+  [[ "$TRACE" ]] && set -x
+  export CI_REGISTRY="hub.docker.com"
+  export CI_APPLICATION_REPOSITORY=$CI_REGISTRY/$CI_PROJECT_PATH
+  export CI_APPLICATION_TAG=$CI_COMMIT_REF_SLUG
+  export CI_CONTAINER_NAME=ci_job_build_${CI_JOB_ID}
+
+  function setup_docker() {
+    if ! docker info &>/dev/null; then
+      if [ -z "$DOCKER_HOST" -a "$KUBERNETES_PORT" ]; then
+        export DOCKER_HOST='tcp://localhost:2375'
+      fi
+    fi
+  }
+
+  function build() {
+    echo "Building Dockerfile-based application..."
+    echo "app: $CI_PROJECT_PATH:$CI_APPLICATION_TAG"
+    echo `git show --format="%h" HEAD | head -1` > build_info.txt
+    echo `git rev-parse --abbrev-ref HEAD` >> build_info.txt
+    #    echo "pull image if exist $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG"
+    #    docker pull $CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG
+    docker build -t "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG" .
+    echo "docker username: $HUB_DOCKER_USERNAME"
+    if [[ -n "$HUB_DOCKER_USERNAME" ]]; then
+      echo "Logging to GitLab Container Registry with CI credentials..."
+      docker login -u "$HUB_DOCKER_USERNAME" -p "$HUB_DOCKER_PASSWORD"
+      echo ""
+    fi
+    echo "Pushing to GitLab Container Registry..."
+    #docker push "$CI_APPLICATION_REPOSITORY:$CI_APPLICATION_TAG"
+    docker push "$CI_PROJECT_PATH:$CI_APPLICATION_TAG"
+    echo ""
+  }
+
+  function deploy() {
+    echo "Start Deploy"
+    #  before_script:
+    apk update
+    apk add openssh-client
+    apk add socat
+    eval $(ssh-agent -s)
+    echo "$SSH_PRIVATE_KEY" > tt.txt
+    chmod 0600 tt.txt
+    ssh-add tt.txt
+    mkdir -p ~/.ssh
+    echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+    REMOTE=gitlab-runner@$IP_NODE_PROD # todo: change here
+    #TYPO3_IMAGE=registry.gitlab.com/vendor/customer/typo3 # todo: change here
+
+    echo " * OPENING DOCKER SOCKET TUNNEL"
+    socat \
+      "UNIX-LISTEN:/tmp/docker.sock,reuseaddr,fork" \
+      "EXEC:'ssh -kTax $REMOTE socat STDIO UNIX-CONNECT\:/var/run/docker.sock'" \
+      &
+      export DOCKER_HOST=unix:///tmp/docker.sock
+    export COMPOSE_PROJECT_NAME=tbot # todo: change here
+    #echo " * LOGIN WITH GITLAB-CI TOKEN"
+    #docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
+    # backup current image if already present locally
+    #if [[ ! "$(docker images -q ${TYPO3_IMAGE} 2> /dev/null)" == "" ]]; then
+    #echo " * BACKING UP CURRENT IMAGE VERSION"
+    #docker tag ${TYPO3_IMAGE} typo3-backup
+    #fi
+    #apk add 'py-pip==8.1.2-r0'
+    #pip install 'docker-compose==1.8.0'
+    apk add --no-cache py-pip
+    pip install docker-compose
+    echo " * PULLING NEW IMAGES"
+    docker-compose -f docker-compose.yml pull
+    echo " * UPDATING RUNNING CONTAINERS"
+    docker-compose -f docker-compose.yml up -d
+    #echo " * CLEANING OLD IMAGES"
+    #ssh -t ${REMOTE} "docker-clean images"
+  }
+
+
+before_script:
+  - *auto_devops
