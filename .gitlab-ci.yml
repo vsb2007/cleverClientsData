@@ -24,5 +24,6 @@ package:
   artifacts:
     paths:
       - target/*.jar
+      - target/*.war
   script:
-    - mvn package -DskipTests
+    - mvn compile
