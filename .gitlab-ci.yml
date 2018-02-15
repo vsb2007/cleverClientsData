@@ -26,4 +26,5 @@ package:
       - target/*.jar
       - target/*.war
   script:
-    - mvn archetype:create -DarchetypeArtifactId=maven-archetype-webapp
+    #- mvn archetype:create -DarchetypeArtifactId=maven-archetype-webapp
+    - mvn compile war:war
