@@ -1,7 +1,6 @@
 package bgroup.xmlModel;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import sun.security.provider.MD5;
 
 /**
  * Created by VSB on 26.12.2017.

@@ -26,4 +26,4 @@ package:
       - target/*.jar
       - target/*.war
   script:
-    - mvn compile
+    - mvn --batch-mode package
