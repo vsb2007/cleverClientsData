@@ -23,6 +23,6 @@ package:
     - linux
   artifacts:
     paths:
-      - $WAR_FILE
+      - target/*.jar
   script:
     - mvn package -DskipTests
