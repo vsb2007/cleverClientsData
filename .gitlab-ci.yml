@@ -26,4 +26,4 @@ package:
       - target/*.jar
       - target/*.war
   script:
-    - mvn --batch-mode package
+    - mvn archetype:create -DarchetypeArtifactId=maven-archetype-webapp
