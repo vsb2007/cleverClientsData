@@ -144,6 +144,6 @@ EXPOSE 8080
 #RUN ln -sf /usr/share/zoneinfo/Asia/Omsk /etc/localtime
 ENV TZ=Asia/Omsk
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
-COPY cleverQ.war /usr/local/tomcat/webapps/cleverQ.war
-COPY ccardApi.war /usr/local/tomcat/webapps/ccardApi.war
+COPY target/cleverQ-1.0.war /usr/local/tomcat/webapps/cleverQ.war
+
 CMD ["catalina.sh", "run"]
