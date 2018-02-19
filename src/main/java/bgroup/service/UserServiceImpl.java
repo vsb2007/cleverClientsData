@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private SmsSender smsSender;
+    //@Autowired
+    //private SmsSender smsSender;
 
     public User findById(int id) {
         return userDao.findById(id);
@@ -121,7 +121,7 @@ public class UserServiceImpl implements UserService {
         }
         String newPassword = sb.toString();
         user.setPassword(passwordEncoder.encode(newPassword));
-        smsSender.sendSms(user.getPhone(), newPassword);
+        //smsSender.sendSms(user.getPhone(), newPassword);
         return true;
     }
 
