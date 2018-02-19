@@ -9,7 +9,7 @@ cache:
 stages:
   - build_war
   - build_docker
-  #- stage
+  - stage
 
 build_war:
   stage: build_war
@@ -23,15 +23,15 @@ build_war:
     #- mvn archetype:create -DarchetypeArtifactId=maven-archetype-webapp
     - mvn compile war:war
 
-#stage:
-#  stage: stage
+stage:
+  stage: stage
  # when: manual
   #environment:
    # name: stage
-  #script:
-  #  - deploy_stage
-  #only:
-#    - master
+  script:
+    - deploy_stage
+  only:
+    - master
 
 
 build_docker:
@@ -84,7 +84,7 @@ build_docker:
     echo ""
   }
 
-  function deploy() {
+  function deploy_stage() {
     echo "Start Deploy"
     #  before_script:
     apk update
@@ -106,7 +106,7 @@ build_docker:
       "EXEC:'ssh -kTax $REMOTE socat STDIO UNIX-CONNECT\:/var/run/docker.sock'" \
       &
       export DOCKER_HOST=unix:///tmp/docker.sock
-    export COMPOSE_PROJECT_NAME=tbot # todo: change here
+    #export COMPOSE_PROJECT_NAME=tbot # todo: change here
     #echo " * LOGIN WITH GITLAB-CI TOKEN"
     #docker login -u gitlab-ci-token -p $CI_BUILD_TOKEN $CI_REGISTRY
     # backup current image if already present locally

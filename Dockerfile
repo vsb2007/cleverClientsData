@@ -145,5 +145,7 @@ EXPOSE 8080
 ENV TZ=Asia/Omsk
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 COPY target/cleverQ-1.0.war /usr/local/tomcat/webapps/cleverQ.war
+RUN mkdir -p /usr/local/tomcat/webapps/cleverQ/WEB-INF/classes
+RUN cp /srv/cleverQ/config/jdbc.properties /usr/local/tomcat/webapps/cleverQ/WEB-INF/classes
 
 CMD ["catalina.sh", "run"]
