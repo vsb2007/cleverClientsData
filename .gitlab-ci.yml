@@ -36,7 +36,7 @@ stage:
 
 prod:
   stage: prod
-  when: manual
+  #when: manual
   #environment:
    # name: stage
   script:
@@ -104,7 +104,6 @@ build_docker:
     eval $(ssh-agent -s)
     echo "$STAGE_SSH_PRIVATE_KEY" > tt.txt
     chmod 0600 tt.txt
-    cat tt.txt
     ssh-add tt.txt
     mkdir -p ~/.ssh
     echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
@@ -162,9 +161,9 @@ build_docker:
       apk add --no-cache py-pip
       pip install docker-compose
       echo " * PULLING NEW IMAGES"
-      docker-compose -f docker-compose.yml pull
+      docker-compose -f docker-compose-prod.yml pull
       echo " * UPDATING RUNNING CONTAINERS"
-      docker-compose -f docker-compose.yml up -d
+      docker-compose -f docker-compose-prod.yml up -d
     }
 
 
