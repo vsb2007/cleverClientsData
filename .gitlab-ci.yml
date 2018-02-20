@@ -7,21 +7,9 @@ cache:
     - .m2/repository
 
 stages:
-  - build_war
-  - build_docker
+#  - build_war
+#  - build_docker
   - stage
-
-build_war:
-  stage: build_war
-  image: maven:3.3.9-jdk-8
-  tags:
-    - linux
-  artifacts:
-    paths:
-      - target/*.war
-  script:
-   #- mvn archetype:create -DarchetypeArtifactId=maven-archetype-webapp
-    - mvn compile war:war
 
 stage:
   stage: stage
@@ -32,18 +20,6 @@ stage:
     - deploy_stage
   only:
     - master
-
-build_docker:
-    stage: build_docker
-    image: docker:git
-    services:
-      - docker:dind
-    script:
-      - setup_docker
-      - build
-    only:
-      - branches
-      - master
 
 .auto_devops: &auto_devops |
   [[ "$TRACE" ]] && set -x
