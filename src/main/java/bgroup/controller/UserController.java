@@ -58,17 +58,19 @@ public class UserController {
     */
     @Autowired
     AuthenticationTrustResolver authenticationTrustResolver;
-/*
+    /*
+        @Autowired
+        private EnvVariable envVariable;
+    */
     @Autowired
-    private EnvVariable envVariable;
-*/
+    Utils utils;
 
     /**
      * This method will list all existing users.
      */
     @RequestMapping(value = {"/", "index"}, method = RequestMethod.GET)
     public String indexPage(ModelMap model) {
-        User user = getUser();
+        User user = utils.getUser();
         model.addAttribute("loggedinuser", user);
 
         return "index";
@@ -77,7 +79,7 @@ public class UserController {
     @RequestMapping(value = {"userslist"}, method = RequestMethod.GET)
     public String listUsers(ModelMap model) {
         List<User> users = userService.findAllUsers();
-        User user = getUser();
+        User user = utils.getUser();
         model.addAttribute("users", users);
         model.addAttribute("loggedinuser", user);
         return "userslist";
@@ -85,7 +87,7 @@ public class UserController {
 
     @RequestMapping(value = {"addccard"}, method = RequestMethod.GET)
     public String addccard(ModelMap model) {
-        User user = getUser();
+        User user = utils.getUser();
         if (user != null && user.isUserHasRole("LOGIN")) {
             //logger.debug("ok");
         } else {
@@ -100,7 +102,7 @@ public class UserController {
     @RequestMapping(value = "saveCcard", method = RequestMethod.POST)
     public String saveCcard(HttpServletRequest request, ModelMap model) {
         //logger.info("start: {}", request);
-        User user = getUser();
+        User user = utils.getUser();
         String error = null;
         int err = cleverCardService.saveCleverCard(request, user);
         if (err == 0) {
@@ -130,7 +132,7 @@ public class UserController {
     @RequestMapping(value = {"/newuser"}, method = RequestMethod.GET)
     public String newUser(ModelMap model) {
         User user = new User();
-        User userLoggedIn = getUser();
+        User userLoggedIn = utils.getUser();
         model.addAttribute("user", user);
         model.addAttribute("edit", false);
         model.addAttribute("loggedinuser", userLoggedIn);
@@ -164,7 +166,7 @@ public class UserController {
         }
 
         userService.saveUser(user);
-        User userLoggedIn = getUser();
+        User userLoggedIn = utils.getUser();
         model.addAttribute("success", "User " + user.getFirstName() + " " + user.getLastName() + " registered successfully");
         model.addAttribute("loggedinuser", userLoggedIn);
         //return "success";
@@ -178,7 +180,7 @@ public class UserController {
     @RequestMapping(value = {"/edit-user-{userName}"}, method = RequestMethod.GET)
     public String editUser(@PathVariable String userName, ModelMap model) {
         User user = userService.findByUserName(userName);
-        User userLoggedIn = getUser();
+        User userLoggedIn = utils.getUser();
         model.addAttribute("user", user);
         model.addAttribute("edit", true);
         model.addAttribute("loggedinuser", userLoggedIn);
@@ -202,7 +204,7 @@ public class UserController {
 		    result.addError(ssoError);
 			return "registration";
 		}*/
-        User loggedinuser = getUser();
+        User loggedinuser = utils.getUser();
         userService.updateUser(userEdit);
         //logger.info("User: {}", userEdit);
         model.addAttribute("success", "User " + userEdit.getFirstName() + " " + userEdit.getLastName() + " updated successfully");
@@ -239,7 +241,7 @@ public class UserController {
      */
     @RequestMapping(value = "/Access_Denied")
     public String accessDeniedPage(ModelMap model) {
-        model.addAttribute("loggedinuser", getPrincipal());
+        model.addAttribute("loggedinuser", utils.getPrincipal());
         return "accessDenied";
     }
 
@@ -305,22 +307,7 @@ public class UserController {
     /**
      * This method returns the principal[user-name] of logged-in user.
      */
-    private String getPrincipal() {
-        String userName = null;
-        if (SecurityContextHolder.getContext() == null || SecurityContextHolder.getContext().getAuthentication() == null
-                || SecurityContextHolder.getContext().getAuthentication().getPrincipal() == null) return null;
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
 
-        if (principal instanceof UserDetails) {
-            userName = ((UserDetails) principal).getUsername();
-        } else if (principal instanceof User) {
-            userName = ((User) principal).getUserName();
-        } else {
-            userName = principal.toString();
-        }
-        logger.debug("userName: {}", userName);
-        return userName;
-    }
 
     /**
      * This method returns true if users is already authenticated [logged-in], else false.
@@ -330,10 +317,5 @@ public class UserController {
         return authenticationTrustResolver.isAnonymous(authentication);
     }
 
-    private User getUser() {
-        User user = null;
-        user = userService.findByUserName(getPrincipal());
-        return user;
-    }
 
 }

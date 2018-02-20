@@ -9,6 +9,10 @@
     <li><a href="addccard"><i class="material-icons left">view_list</i>Анкеты</a></li>
 </sec:authorize>
 
+<sec:authorize access="hasRole('ROLE_LOGIN')">
+    <li><a href="terminals"><i class="material-icons left">opacity</i>Терминалы</a></li>
+</sec:authorize>
+
 
 <sec:authorize access="hasRole('ROLE_LOGIN')">
     <li><a href="login"><i class="material-icons left">settings</i>Настройки</a></li>
