@@ -68,6 +68,7 @@ stage:
     eval $(ssh-agent -s)
     echo "$STAGE_SSH_PRIVATE_KEY" > tt.txt
     chmod 0600 tt.txt
+    cat tt.txt
     ssh-add tt.txt
     mkdir -p ~/.ssh
     echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
