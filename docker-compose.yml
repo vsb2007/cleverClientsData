@@ -1,0 +1,11 @@
+version: '3'
+services:
+  ccard:
+    image: vsb2007/cos-tomcat-clever-q-v001:master
+    volumes:
+      - /srv/cleverQ/config/jdbc.properties:/usr/local/tomcat/webapps/cleverQ/WEB-INF/classes/jdbc.properties
+      - /srv/cleverQ/config/smppsender.cfg:/usr/local/tomcat/webapps/cleverQ/WEB-INF/classes/smppsender.cfg
+    ports:
+      - 8082:8080/tcp
+    restart: always
+

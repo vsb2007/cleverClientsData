@@ -6,7 +6,7 @@
         <div class="nav-wrapper blue-grey">
             <a href="#" data-activates="mobile-menu" class="button-collapse"><i class="material-icons">menu</i></a>
             <c:if test="${loggedinuser != null && loggedinuser.getFio()!=null}">
-                <h3 class="brand-logo right">${loggedinuser.getFio()}</h3>
+                <h3 class="brand-logo right">${loggedinuser.getFio()} !-1</h3>
             </c:if>
             <ul class="left hide-on-med-and-down">
                 <%@include file="menu_li.jsp" %>

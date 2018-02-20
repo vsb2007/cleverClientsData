@@ -9,7 +9,7 @@ cache:
 stages:
   - build_war
   - build_docker
- # - stage
+  - stage
 
 build_war:
   stage: build_war
@@ -23,15 +23,15 @@ build_war:
    #- mvn archetype:create -DarchetypeArtifactId=maven-archetype-webapp
     - mvn compile war:war
 
-#stage:
-#  stage: stage
-# # when: manual
-#  #environment:
-#   # name: stage
-#  script:
-#    - deploy_stage
-#  only:
-#    - master
+stage:
+  stage: stage
+ # when: manual
+  #environment:
+   # name: stage
+  script:
+    - deploy_stage
+  only:
+    - master
 
 build_docker:
     stage: build_docker
@@ -90,13 +90,13 @@ build_docker:
     apk add openssh-client
     apk add socat
     eval $(ssh-agent -s)
-    echo "$SSH_PRIVATE_KEY" > tt.txt
+    echo "$STAGE_SSH_PRIVATE_KEY" > tt.txt
     chmod 0600 tt.txt
     ssh-add tt.txt
     mkdir -p ~/.ssh
     echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
 
-    REMOTE=gitlab-runner@$IP_NODE_PROD # todo: change here
+    REMOTE=$STAGE_SSH_USERNAME@$STAGE_SSH_HOST	 # todo: change here
     #TYPO3_IMAGE=registry.gitlab.com/vendor/customer/typo3 # todo: change here
 
     echo " * OPENING DOCKER SOCKET TUNNEL"
