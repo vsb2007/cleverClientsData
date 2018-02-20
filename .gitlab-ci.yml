@@ -7,9 +7,22 @@ cache:
     - .m2/repository
 
 stages:
-#  - build_war
-#  - build_docker
+  - build_war
+  - build_docker
   - stage
+  - prod
+
+build_war:
+  stage: build_war
+  image: maven:3.3.9-jdk-8
+  tags:
+    - linux
+  artifacts:
+    paths:
+      - target/*.war
+  script:
+   #- mvn archetype:create -DarchetypeArtifactId=maven-archetype-webapp
+    - mvn compile war:war
 
 stage:
   stage: stage
@@ -20,6 +33,29 @@ stage:
     - deploy_stage
   only:
     - master
+
+prod:
+  stage: prod
+  when: manual
+  #environment:
+   # name: stage
+  script:
+    - deploy_prod
+  only:
+    - master
+
+build_docker:
+    stage: build_docker
+    image: docker:git
+    services:
+      - docker:dind
+    script:
+      - setup_docker
+      - build
+    only:
+      - branches
+      - master
+
 
 .auto_devops: &auto_devops |
   [[ "$TRACE" ]] && set -x
@@ -101,6 +137,35 @@ stage:
     #echo " * CLEANING OLD IMAGES"
     #ssh -t ${REMOTE} "docker-clean images"
   }
+
+  function deploy_prod() {
+      echo "Start Deploy to Prod"
+      #  before_script:
+      apk update
+      apk add openssh-client
+      apk add socat
+      eval $(ssh-agent -s)
+      echo "$PROD_SSH_PRIVATE_KEY" > tt.txt
+      chmod 0600 tt.txt
+      ssh-add tt.txt
+      mkdir -p ~/.ssh
+      echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+
+      REMOTE=$PROD_SSH_USERNAME@$PROD_SSH_HOST	 # todo: change here
+
+      echo " * OPENING DOCKER SOCKET TUNNEL"
+      socat \
+        "UNIX-LISTEN:/tmp/docker.sock,reuseaddr,fork" \
+        "EXEC:'ssh -kTax $REMOTE socat STDIO UNIX-CONNECT\:/var/run/docker.sock'" \
+        &
+        export DOCKER_HOST=unix:///tmp/docker.sock
+      apk add --no-cache py-pip
+      pip install docker-compose
+      echo " * PULLING NEW IMAGES"
+      docker-compose -f docker-compose.yml pull
+      echo " * UPDATING RUNNING CONTAINERS"
+      docker-compose -f docker-compose.yml up -d
+    }
 
 
 before_script:
