@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import bgroup.model.SmsSender;
 import bgroup.model.UserProfile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,8 +26,8 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    //@Autowired
-    //private SmsSender smsSender;
+    @Autowired
+    private SmsSender smsSender;
 
     public User findById(int id) {
         return userDao.findById(id);
@@ -120,7 +121,7 @@ public class UserServiceImpl implements UserService {
         }
         String newPassword = sb.toString();
         user.setPassword(passwordEncoder.encode(newPassword));
-        //smsSender.sendSms(user.getPhone(), newPassword);
+        smsSender.sendSms(user.getPhone(), newPassword);
         return true;
     }
 
