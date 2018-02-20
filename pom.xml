@@ -188,11 +188,11 @@
                 <version>3.2.0</version>
                 <configuration>
                     <webResources>
-                        <resources>
-                            <resource>
-                                <directory>${project.build.directory}/${project.build.finalName}</directory>
-                            </resource>
-                        </resources>
+                        <resource>
+                            <!-- this is relative to the pom.xml directory -->
+                            <directory>web</directory>
+                            <!-- the list has a default value of ** -->
+                        </resource>
                     </webResources>
                 </configuration>
             </plugin>
