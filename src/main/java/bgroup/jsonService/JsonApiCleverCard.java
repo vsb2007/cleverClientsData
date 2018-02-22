@@ -28,6 +28,7 @@ public class JsonApiCleverCard {
         SurnameApi surnameApi = null;
         try {
             surnameApi = mapper.readValue(response.getBody(), SurnameApi.class);
+
         } catch (IOException e) {
             e.printStackTrace();
         }

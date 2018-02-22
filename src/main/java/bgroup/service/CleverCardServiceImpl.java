@@ -109,7 +109,8 @@ public class CleverCardServiceImpl implements CleverCardService {
         /*
         смотрим сущестсвует ли карта в online сервере
          */
-        if (!(new JsonApiCleverCard().isSurnameByCardNumberIsEmpty("01" + cardNumberString))) {
+        if ((new JsonApiCleverCard().isSurnameByCardNumberIsEmpty("01" + cardNumberString))) {
+            logger.info("карта уже существует");
             return -6;
         }
 
