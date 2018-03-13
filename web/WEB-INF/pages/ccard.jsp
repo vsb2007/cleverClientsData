@@ -30,6 +30,16 @@
                         <div class="row">
                             <div class="col s12">
                                 <div class="input-field col s12">
+                                    <input type="text" class="validate" name="cardNumberOld" id="cardNumberOld"
+                                           pattern="\d\d\d\d\d\d" placeholder="шесть цифр"
+                                           />
+                                    <label for="cardNumberOld">Выдана взамен карты</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
+                                <div class="input-field col s12">
                                     <input type="text" class="validate" name="f" id="f" required/>
                                     <label for="f">Фамилия</label>
                                 </div>

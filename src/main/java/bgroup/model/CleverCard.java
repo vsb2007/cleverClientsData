@@ -1,13 +1,8 @@
 package bgroup.model;
 
-import org.hibernate.annotations.Type;
-import org.hibernate.validator.constraints.NotEmpty;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
 
 /**
  * Created by VSB on 24.07.2017.
@@ -44,7 +39,10 @@ public class CleverCard implements Serializable {
     private String vendorAuto;
 
     @Column(name = "card_number")
-    private int cardNumber;
+    private Integer cardNumber;
+
+    @Column(name = "card_number_old")
+    private Integer cardNumberOld;
 
     @Column(name = "dateFill")
     private Date dateFill;
@@ -61,6 +59,14 @@ public class CleverCard implements Serializable {
     private Integer userId;
 
     public CleverCard() {
+    }
+
+    public Integer getCardNumberOld() {
+        return cardNumberOld;
+    }
+
+    public void setCardNumberOld(Integer cardNumberOld) {
+        this.cardNumberOld = cardNumberOld;
     }
 
     public Integer getUserId() {
@@ -119,11 +125,11 @@ public class CleverCard implements Serializable {
         this.vendorAuto = vendorAuto;
     }
 
-    public int getCardNumber() {
+    public Integer getCardNumber() {
         return cardNumber;
     }
 
-    public void setCardNumber(int cardNumber) {
+    public void setCardNumber(Integer cardNumber) {
         this.cardNumber = cardNumber;
     }
 

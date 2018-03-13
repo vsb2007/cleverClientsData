@@ -1,6 +1,10 @@
 package bgroup.controller;
 
+import bgroup.model.Oil;
+import bgroup.model.Org;
 import bgroup.model.User;
+import bgroup.service.OilService;
+import bgroup.service.OrgService;
 import bgroup.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,18 +27,29 @@ import java.util.List;
 @SessionAttributes("roles")
 public class TerminalsController {
     static final Logger logger = LoggerFactory.getLogger(TerminalsController.class);
+
     @Autowired
     Utils utils;
+
+    @Autowired
+    OilService oilService;
+
+    @Autowired
+    OrgService orgService;
 
     @RequestMapping(value = {"terminals"}, method = RequestMethod.GET)
     public String listUsers(ModelMap model) {
 
         User user = utils.getUser();
+        List<Oil> oilList = oilService.findAll();
+        List<Org> orgList = orgService.findAll();
 
         model.addAttribute("loggedinuser", user);
+        model.addAttribute("oilList", oilList);
+        model.addAttribute("orgList", orgList);
+        //logger.debug("oil: {}", oilList.get(0).getOil());
         return "terminals";
     }
-
 
 
 }

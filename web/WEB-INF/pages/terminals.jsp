@@ -1,3 +1,4 @@
+<%@ page import="bgroup.model.Org" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
@@ -11,7 +12,7 @@
     <div class="container">
         <div class="row">
             <div class="col s12">
-                <%--  <%@ include file="menu_cols.jsp" %> --%>
+                <%@ include file="menu_cols.jsp" %>
                 <sec:authorize access="hasRole('LOGIN') or hasRole('ADMIN')">
                     <div class="row">
                         <span class="col s12 center-align">Терминалы</span>
@@ -32,14 +33,24 @@
                             </div>
                             <div class="col s2">
                                 <div class="input-field col s12">
-                                    <input type="number" class="text" name="predpr" id="predpr">
-                                    <label for="smena">Предприятие</label>
+                                    <select name="org" id="org" required>
+                                        <option value="" disabled selected>Выберете предприятие</option>
+                                        <c:forEach items="${orgList}" var="org">
+                                            <option value="${org.getId()}" >${org.getOrgName()}</option>
+                                        </c:forEach>
+                                    </select>
+                                    <label >Предприятие</label>
                                 </div>
                             </div>
                             <div class="col s2">
                                 <div class="input-field col s12">
-                                    <input type="number" class="text" name="oil" id="oil">
-                                    <label for="smena">Топливо</label>
+                                    <select  name="oil" id="oil" required>
+                                        <option value="" disabled selected>Топливо</option>
+                                        <c:forEach items="${oilList}" var="oil">
+                                            <option value="${oil.getId()}" >${oil.getOil()}</option>
+                                        </c:forEach>
+                                    </select>
+                                    <label >Топливо</label>
                                 </div>
                             </div>
                             <div class="col s2">
@@ -52,6 +63,12 @@
                                 <div class="input-field col s12">
                                     <input type="number" class="text" name="vterm" id="vterm">
                                     <label for="smena">Объем Терм</label>
+                                </div>
+                            </div>
+                            <div class="col s2">
+                                <div class="input-field col s12">
+                                    <input type="text" class="text" name="prim" id="prim">
+                                    <label for="prim">Примечание</label>
                                 </div>
                             </div>
                         </div>
@@ -68,7 +85,7 @@
                              --%>
                         <div class="row">
                             <div class="col s12">
-                                <input type="submit" value="Зарегистрировать" class="btn btn-primary btn-sm"/>
+                                <input type="button" value="Зарегистрировать" class="btn btn-primary btn-sm"/>
                             </div>
                         </div>
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" id="token"/>
@@ -92,6 +109,9 @@
         close: 'Ok',
         format: 'yyyy-mm-dd',
         closeOnSelect: false // Close upon selecting a date,
+    });
+    $(document).ready(function() {
+        $('select').material_select();
     });
 </script>
 <%@include file="footer.jsp" %>

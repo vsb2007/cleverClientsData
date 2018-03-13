@@ -106,12 +106,13 @@ public class UserController {
         String error = null;
         int err = cleverCardService.saveCleverCard(request, user);
         if (err == 0) {
-
             error = "Форма успешно зарегистрирована";
-        } else if (err == -3) {
+        } else if (err == -3 || err == -6) {
             error = "Ошибка: номер карты зарегистрирован";
         } else if (err == -10) {
             error = "Проблема с БД";
+        } else if (err == -2) {
+            error = "Номер карты указан не верно";
         } else {
             error = "Заполните форму: ошибка " + err;
         }
@@ -214,7 +215,6 @@ public class UserController {
         return "registration";
     }
 
-
     /**
      * This method will delete an user by it's SSOID value.
      */
@@ -226,7 +226,6 @@ public class UserController {
         userService.deleteUserByUserName(userName);
         return "redirect:/index";
     }
-
 
     /**
      * This method will provide UserProfile list to views

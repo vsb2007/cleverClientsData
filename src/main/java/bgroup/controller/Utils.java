@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 @Service("utils")
 public class Utils {
     static final Logger logger = LoggerFactory.getLogger(Utils.class);
+
     @Autowired
     UserService userService;
 

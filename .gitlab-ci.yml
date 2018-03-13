@@ -36,7 +36,7 @@ stage:
 
 prod:
   stage: prod
-  #when: manual
+  when: manual
   #environment:
    # name: stage
   script:
@@ -55,7 +55,6 @@ build_docker:
     only:
       - branches
       - master
-
 
 .auto_devops: &auto_devops |
   [[ "$TRACE" ]] && set -x
@@ -165,7 +164,6 @@ build_docker:
       echo " * UPDATING RUNNING CONTAINERS"
       docker-compose -f docker-compose-prod.yml up -d
     }
-
 
 before_script:
   - *auto_devops

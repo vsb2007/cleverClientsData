@@ -34,9 +34,14 @@ public class CleverCardServiceImpl implements CleverCardService {
 
         if (request == null) return -1;
         Integer cardNumber = null;
+        Integer cardNumberOld = null;
         String cardNumberString = request.getParameter("cardNumber");
+        String cardNumberStringOld = request.getParameter("cardNumberOld");
         try {
             cardNumber = Integer.parseInt(cardNumberString);
+            if (cardNumberStringOld != null && !cardNumberStringOld.equals(""))
+                cardNumberOld = Integer.parseInt(cardNumberStringOld);
+            else cardNumberStringOld = null;
         } catch (Exception e) {
             logger.error(e.toString());
             return -2;
@@ -78,6 +83,7 @@ public class CleverCardServiceImpl implements CleverCardService {
         cleverCard.setAzs(user.getAzs());
         cleverCard.setUserId(user.getId());
         cleverCard.setCardNumber(cardNumber);
+        cleverCard.setCardNumberOld(cardNumberOld);
         SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
         Date birthDate = null;
         try {
