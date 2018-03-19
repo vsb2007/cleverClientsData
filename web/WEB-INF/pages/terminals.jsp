@@ -21,71 +21,64 @@
                         <div class="row">
                             <div class="col s2">
                                 <div class="input-field col s12">
-                                    <input type="text" class="datepicker" name="date" id="date">
+                                    <input type="text" class="datepicker" name="date" id="date" required
+                                           onchange="clearResults()">
                                     <label for="date">Дата измерения</label>
                                 </div>
                             </div>
                             <div class="col s2">
                                 <div class="input-field col s12">
-                                    <input type="number" class="text" name="smena" id="smena">
+                                    <input type="number" class="text" name="smena" id="smena" required>
                                     <label for="smena">Смена</label>
                                 </div>
                             </div>
                             <div class="col s2">
                                 <div class="input-field col s12">
                                     <select name="org" id="org" required>
-                                        <option value="" disabled selected>Выберете предприятие</option>
+                                        <option value="" disabled selected></option>
                                         <c:forEach items="${orgList}" var="org">
-                                            <option value="${org.getId()}" >${org.getOrgName()}</option>
+                                            <option value="${org.getId()}">${org.getOrgName()}</option>
                                         </c:forEach>
                                     </select>
-                                    <label >Предприятие</label>
+                                    <label>Предприятие</label>
                                 </div>
                             </div>
                             <div class="col s2">
                                 <div class="input-field col s12">
-                                    <select  name="oil" id="oil" required>
-                                        <option value="" disabled selected>Топливо</option>
+                                    <select name="oil" id="oil" required>
+                                        <option value="" disabled selected></option>
                                         <c:forEach items="${oilList}" var="oil">
-                                            <option value="${oil.getId()}" >${oil.getOil()}</option>
+                                            <option value="${oil.getId()}">${oil.getOil()}</option>
                                         </c:forEach>
                                     </select>
-                                    <label >Топливо</label>
+                                    <label>Топливо</label>
                                 </div>
                             </div>
                             <div class="col s2">
                                 <div class="input-field col s12">
-                                    <input type="number" class="text" name="vco" id="vco">
-                                    <label for="smena">Объем СО</label>
+                                    <input type="number" class="text" name="vco" id="vco" required>
+                                    <label for="vco">Объем СО</label>
                                 </div>
                             </div>
                             <div class="col s2">
                                 <div class="input-field col s12">
-                                    <input type="number" class="text" name="vterm" id="vterm">
-                                    <label for="smena">Объем Терм</label>
+                                    <input type="number" class="text" name="vterm" id="vterm" required>
+                                    <label for="vterm">Объем Терм</label>
                                 </div>
                             </div>
-                            <div class="col s2">
+                        </div>
+                        <div class="row">
+                            <div class="col s12">
                                 <div class="input-field col s12">
-                                    <input type="text" class="text" name="prim" id="prim">
+                                    <textarea class="materialize-textarea" name="prim" id="prim"></textarea>
                                     <label for="prim">Примечание</label>
                                 </div>
                             </div>
                         </div>
-
-                            <%-- <div class="row">
-                                 <div class="col s12">
-                                     <div class="input-field col s12">
-                                         <input type="text" class="validate" name="operatorNameCardOut"
-                                                id="operatorNameCardOut"/>
-                                         <label for="operatorNameCardOut">Кто выдал карту</label>
-                                     </div>
-                                 </div>
-                             </div>
-                             --%>
                         <div class="row">
                             <div class="col s12">
-                                <input type="button" value="Зарегистрировать" class="btn btn-primary btn-sm"/>
+                                <input type="button" value="Зарегистрировать" class="btn btn-primary btn-sm"
+                                       onclick="createTerminal()"/>
                             </div>
                         </div>
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" id="token"/>
@@ -107,11 +100,38 @@
         today: 'Today',
         clear: 'Clear',
         close: 'Ok',
-        format: 'yyyy-mm-dd',
+        format: 'dd.mm.yyyy',
         closeOnSelect: false // Close upon selecting a date,
     });
-    $(document).ready(function() {
+    $(document).ready(function () {
         $('select').material_select();
     });
+
+    function clearResults() {
+        document.getElementById("results").innerHTML = "";
+    }
+
+    function createTerminal() {
+        var msg = $('#terminalForm').serialize();
+        $.ajax({
+            type: 'POST',
+            url: 'createTerminal',
+            data: msg,
+            success: function (data) {
+                if (data == 0) {
+                    $('#terminalForm')[0].reset();
+                    document.getElementById("results").innerHTML = "Показания записаны";
+                }
+                else if (data < 0)
+                    document.getElementById("results").innerHTML = "Ошибка: " + data;
+            },
+            error: function (xhr, str) {
+                //$('.results').html('Возникла ошибка: ' + xhr.responseCode);
+                document.getElementById("results").innerHTML = "Возникла ошибка: " + xhr.responseCode;
+            }
+        });
+
+    }
+
 </script>
 <%@include file="footer.jsp" %>

@@ -36,7 +36,7 @@ stage:
 
 prod:
   stage: prod
-  when: manual
+  #when: manual
   #environment:
    # name: stage
   script:
