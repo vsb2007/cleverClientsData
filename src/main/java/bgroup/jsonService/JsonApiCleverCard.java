@@ -29,7 +29,7 @@ public class JsonApiCleverCard {
         try {
             surnameApi = mapper.readValue(response.getBody(), SurnameApi.class);
 
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         if (surnameApi == null || surnameApi.equals("")) return true;

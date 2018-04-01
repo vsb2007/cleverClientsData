@@ -81,8 +81,8 @@
                         <div class="row">
                             <div class="col s12">
                                 <div class="input-field col s12">
-                                    <form:input type="number" class="validate" path="azs" id="azs"/>
-                                    <label for="azs">Номер АЗС</label>
+                                    <form:input type="number" class="validate" path="azsId" id="azsId"/>
+                                    <label for="azsId">Номер АЗС</label>
                                 </div>
                             </div>
                         </div>

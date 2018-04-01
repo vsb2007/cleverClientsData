@@ -12,34 +12,24 @@
     <div class="container">
         <div class="row">
             <div class="col s12">
+                <%@ include file="menu_cols.jsp" %>
                 <sec:authorize access="hasRole('LOGIN') or hasRole('ADMIN')">
                     <div class="row">
-                        <span class="col s12 center-align">Терминалы</span>
+                        <span class="col s12 center-align">Снег</span>
                     </div>
-                    <form action="#" method="post" class="" id="terminalForm">
+                    <form action="#" method="post" class="" id="snowForm">
                         <div class="row">
                             <div class="col s2">
                                 <div class="input-field col s12">
                                     <input type="text" class="datepicker" name="date" id="date" required
                                            onchange="clearResults()">
-                                    <label for="date">Дата измерения</label>
+                                    <label for="date">Дата</label>
                                 </div>
                             </div>
                             <div class="col s2">
                                 <div class="input-field col s12">
-                                    <input type="number" class="text" name="smena" id="smena" required>
-                                    <label for="smena">Смена</label>
-                                </div>
-                            </div>
-                            <div class="col s2">
-                                <div class="input-field col s12">
-                                    <select name="org" id="org" required>
-                                        <option value="" disabled selected></option>
-                                        <c:forEach items="${orgList}" var="org">
-                                            <option value="${org.getId()}">${org.getOrgName()}</option>
-                                        </c:forEach>
-                                    </select>
-                                    <label>Предприятие</label>
+                                    <input type="text" class="text" name="target" id="target" required>
+                                    <label for="target">Цель</label>
                                 </div>
                             </div>
                             <div class="col s2">
@@ -55,19 +45,24 @@
                             </div>
                             <div class="col s2">
                                 <div class="input-field col s12">
-                                    <input type="number" class="text" name="vco" id="vco" required>
-                                    <label for="vco">Объем СО</label>
+                                    <input type="number" class="text" name="v" id="v" required>
+                                    <label for="v">Объем</label>
                                 </div>
                             </div>
                             <div class="col s2">
                                 <div class="input-field col s12">
-                                    <input type="number" class="text" name="vterm" id="vterm" required>
-                                    <label for="vterm">Объем Терм</label>
+                                    <select name="commander" id="commander" required>
+                                        <option value="" disabled selected></option>
+                                        <c:forEach items="${commanderList}" var="commander">
+                                            <option value="${commander.getId()}">${commander.getName()}</option>
+                                        </c:forEach>
+                                    </select>
+                                    <label>Распорядился</label>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col s12">
+                            <div class="col s10">
                                 <div class="input-field col s12">
                                     <textarea class="materialize-textarea" name="prim" id="prim"></textarea>
                                     <label for="prim">Примечание</label>
@@ -77,7 +72,7 @@
                         <div class="row">
                             <div class="col s12">
                                 <input type="button" value="Зарегистрировать" class="btn btn-primary btn-sm"
-                                       onclick="createTerminal()"/>
+                                       onclick="createSnow()"/>
                             </div>
                         </div>
                         <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}" id="token"/>
@@ -110,15 +105,15 @@
         document.getElementById("results").innerHTML = "";
     }
 
-    function createTerminal() {
-        var msg = $('#terminalForm').serialize();
+    function createSnow() {
+        var msg = $('#snowForm').serialize();
         $.ajax({
             type: 'POST',
-            url: 'createTerminal',
+            url: 'createSnow',
             data: msg,
             success: function (data) {
                 if (data == 0) {
-                    $('#terminalForm')[0].reset();
+                    $('#snowForm')[0].reset();
                     document.getElementById("results").innerHTML = "Показания записаны";
                 }
                 else if (data < 0)
