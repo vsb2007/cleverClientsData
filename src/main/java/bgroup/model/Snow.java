@@ -34,6 +34,8 @@ public class Snow implements Serializable {
     @Column(name = "commanderId")
     private Integer commanderId;
 
+    @Column(name = "userId")
+    private Integer userId;
 
     @Column(name = "prim")
     private String prim;
@@ -125,5 +127,13 @@ public class Snow implements Serializable {
 
     public void setLocked(Integer locked) {
         this.locked = locked;
+    }
+
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 }

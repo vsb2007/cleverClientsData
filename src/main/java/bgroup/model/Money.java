@@ -9,8 +9,8 @@ import java.util.Date;
  * cleverClients
  */
 @Entity
-@Table(name = "TERMINAL")
-public class Terminal implements Serializable {
+@Table(name = "MONEY")
+public class Money implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,26 +22,14 @@ public class Terminal implements Serializable {
     @Column(name = "dateFill")
     private Date dateFill;
 
-    @Column(name = "smena")
-    private Integer smena;
-
-    @Column(name = "azs")
-    private Integer azs;
-
-    @Column(name = "orgId")
-    private Integer orgId;
-
-    @Column(name = "oilId")
-    private Integer oilId;
+    @Column(name = "azsId")
+    private Integer azsId;
 
     @Column(name = "userId")
     private Integer userId;
 
-    @Column(name = "vCO")
-    private Double vCO;
-
-    @Column(name = "vTerm")
-    private Double vTerm;
+    @Column(name = "v")
+    private Double v;
 
     @Column(name = "prim")
     private String prim;
@@ -49,7 +37,7 @@ public class Terminal implements Serializable {
     @Column(name = "locked")
     private Integer locked;
 
-    public Terminal() {
+    public Money() {
     }
 
     public Integer getId() {
@@ -76,44 +64,20 @@ public class Terminal implements Serializable {
         this.dateFill = dateFill;
     }
 
-    public Integer getSmena() {
-        return smena;
+    public Integer getAzsId() {
+        return azsId;
     }
 
-    public void setSmena(Integer smena) {
-        this.smena = smena;
+    public void setAzsId(Integer azsId) {
+        this.azsId = azsId;
     }
 
-    public Integer getOrgId() {
-        return orgId;
+    public Double getV() {
+        return v;
     }
 
-    public void setOrgId(Integer orgId) {
-        this.orgId = orgId;
-    }
-
-    public Integer getOilId() {
-        return oilId;
-    }
-
-    public void setOilId(Integer oilId) {
-        this.oilId = oilId;
-    }
-
-    public Double getvCO() {
-        return vCO;
-    }
-
-    public void setvCO(Double vCO) {
-        this.vCO = vCO;
-    }
-
-    public Double getvTerm() {
-        return vTerm;
-    }
-
-    public void setvTerm(Double vTerm) {
-        this.vTerm = vTerm;
+    public void setV(Double v) {
+        this.v = v;
     }
 
     public String getPrim() {
@@ -130,14 +94,6 @@ public class Terminal implements Serializable {
 
     public void setLocked(Integer locked) {
         this.locked = locked;
-    }
-
-    public Integer getAzs() {
-        return azs;
-    }
-
-    public void setAzs(Integer azs) {
-        this.azs = azs;
     }
 
     public Integer getUserId() {

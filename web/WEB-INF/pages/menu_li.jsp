@@ -17,9 +17,13 @@
     <li><a href="snow"><i class="material-icons left">ac_unit</i>Снег</a></li>
 </sec:authorize>
 
+<sec:authorize access="hasRole('ROLE_LOGIN')">
+    <li><a href="money"><i class="material-icons left">attach_money</i>Инкассация</a></li>
+</sec:authorize>
+
 
 <sec:authorize access="hasRole('ROLE_LOGIN')">
-    <li><a href="login"><i class="material-icons left">settings</i>Настройки</a></li>
+    <!-- <li><a href="login"><i class="material-icons left">settings</i>Настройки</a></li> -->
     <li><a href="logout"><i class="material-icons left">power_settings_new</i>Выход</a></li>
 </sec:authorize>
 <sec:authorize access="!hasRole('ROLE_LOGIN')">

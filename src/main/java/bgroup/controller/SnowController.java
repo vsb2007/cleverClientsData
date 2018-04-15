@@ -6,16 +6,15 @@ import bgroup.model.User;
 import bgroup.service.CommanderService;
 import bgroup.service.OilService;
 import bgroup.service.SnowService;
+import com.thoughtworks.qdox.model.expression.Not;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import javax.servlet.http.HttpServletRequest;
@@ -66,6 +65,4 @@ public class SnowController {
 
         return snowService.createSnow(request, user) + "";
     }
-
-
 }

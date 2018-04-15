@@ -128,6 +128,7 @@ public class TerminalServiceImpl implements TerminalService {
             terminal.setvTerm(vterm);
             terminal.setPrim(primString);
             terminal.setAzs(user.getAzs());
+            terminal.setUserId(user.getId());
         } catch (Exception e) {
             logger.error("error: {}", e);
             return -6;

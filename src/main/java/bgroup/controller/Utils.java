@@ -9,6 +9,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by VSB on 20.02.2018.
  * cleverClients
@@ -37,9 +39,14 @@ public class Utils {
         return userName;
     }
 
-    protected  User getUser() {
+    protected User getUser() {
         User user = null;
         user = userService.findByUserName(getPrincipal());
         return user;
+    }
+
+    protected boolean isIpValid(User user, HttpServletRequest request) {
+
+        return true;
     }
 }

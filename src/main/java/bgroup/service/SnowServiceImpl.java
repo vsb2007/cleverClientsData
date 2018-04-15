@@ -112,6 +112,7 @@ public class SnowServiceImpl implements SnowService {
             snow.setCommanderId(commander);
             snow.setPrim(primString);
             snow.setAzsId(user.getAzs());
+            snow.setUserId(user.getId());
         } catch (Exception e) {
             logger.error("error: {}", e);
             return -6;
